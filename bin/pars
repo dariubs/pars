@@ -1,0 +1,58 @@
+#!/usr/bin/env ruby
+
+require 'yaml'
+require "fileutils"
+require "redcarpet"
+require "pars"
+
+markdown = Redcarpet::Markdown.new(Redcarpet::Render::HTML,
+									autolink: true, tables: true,
+									prettify: true,
+									fenced_code_blocks: true)
+
+if Pars.isParsDir? then
+
+	if Pars.anyPost? then
+
+		header = File.open("view/header.html").read
+		footer = File.open("view/footer.html").read
+
+		File.delete('index.html') if File.exist?('index.html')
+
+		index = File.open("index.html","a")
+
+		Dir.foreach( Dir.pwd + "/posts" ) do |item|
+			
+			puts item
+
+			# Remove . and .. file in from list
+			next if item == '.' or item == '..'
+
+
+			data = File.open(Dir.pwd + "/posts/" + item)
+
+			repc = { ".md" => ".html"}
+
+
+			FileUtils.touch( item.sub!(".md", ".html") )
+				
+			File.open( Dir.pwd + "/" + item , 'w' ) do |file|
+				file.write( header + markdown.render(data.read) + footer)
+			end
+
+			index.write('<li><a href='+item +'>'+ item.sub!(".html", "") + '</a></li>')
+
+			data.close
+
+			puts "\n"
+		end
+
+		index.close
+	else
+
+		puts "posts not exists"
+	end
+
+else
+	puts "Here is not a pars project."
+end
