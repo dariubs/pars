@@ -1,9 +1,12 @@
 # -*- encoding: utf-8 -*-
 
+lib = File.expand_path('../lib', __FILE__)
+$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
+require 'pars/version'
 
 Gem::Specification.new do |s|
   s.name        = 'pars'
-  s.version     = '0.0.0'
+  s.version     = Pars::VERSION
   s.date        = '2015-09-03'
   s.summary     = "Pars"
   s.description = "A static, static site generator!"
