@@ -1,8 +1,10 @@
 # -*- coding: UTF-8 -*-
 
 require 'yaml'
+require "haml"
 require "fileutils"
 require "kramdown"
+require "tilt"
 
 
 class Pars
@@ -54,6 +56,8 @@ class Pars
 									prettify: true,
 									fenced_code_blocks: true)
 
+		template = Tilt.new("view/theme.haml")
+
 		Dir.glob("posts/**/" + "*.md") do |post|
 
 			md_content = File.open(post,"r:UTF-8")
@@ -70,7 +74,7 @@ class Pars
 			end
 
 			File.open(html_file.sub(".md",".html"), "w:UTF-8") { |io|
-				io.write(html_content)
+				io.write(template.render(self,:title => "title", :content => html_content))
 				puts html_file + " created"
 			}
 
