@@ -11,6 +11,8 @@ markdown = Redcarpet::Markdown.new(Redcarpet::Render::HTML,
 									prettify: true,
 									fenced_code_blocks: true)
 
+$settings = File.open(".pars.yml") { |file| YAML.load(file) }
+
 if Pars.isParsDir? then
 
 	if Pars.anyPost? then
