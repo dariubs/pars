@@ -1,6 +1,9 @@
+# -*- coding: UTF-8 -*-
+
 require 'yaml'
 require "fileutils"
 require "kramdown"
+
 
 class Pars
 
@@ -18,6 +21,10 @@ class Pars
 		else
 			false
 		end
+	end
+
+	def self.dir?(path)
+		true
 	end
 
 	def self.directory_hash(path, name=nil)
@@ -42,10 +49,34 @@ class Pars
 	end
 
 	def self.generate
-		Dir.glob(Dir.pwd + "/posts/" + "*.md") do |doc|
-			puts doc
-		end
-		
+		markdown = Redcarpet::Markdown.new(Redcarpet::Render::HTML,
+									autolink: true, tables: true,
+									prettify: true,
+									fenced_code_blocks: true)
+
+		Dir.glob("posts/**/" + "*.md") do |post|
+
+			md_content = File.open(post,"r:UTF-8")
+
+			html_content = markdown.render(md_content.read)
+			html_file = post.sub("posts/","")
+			html_dir = post.sub(/[\d]*\.?[\w]+.md$/,"").sub("posts/","")
+
+			puts "for :" + post
+
+			if html_dir != "" then
+				FileUtils.mkdir_p(html_dir)
+				puts(html_dir + "generated")
+			end
+
+			File.open(html_file.sub(".md",".html"), "w:UTF-8") { |io|
+				io.write(html_content)
+				puts html_file + " created"
+			}
+
+			md_content.close
+			
+		end		
 	end
 
 end
