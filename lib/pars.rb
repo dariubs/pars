@@ -58,6 +58,16 @@ class Pars
 
 		template = Tilt.new("view/theme.haml")
 
+		filetant = ["posts","view",".pars.yml"]
+
+		Dir.foreach(Dir.pwd) do |item|
+			next if item == '.' or item == '..'
+			if !filetant.include? item then
+				FileUtils.rm_rf item 
+				puts "remove :" + item
+			end
+		end
+
 		Dir.glob("posts/**/" + "*.md") do |post|
 
 			md_content = File.open(post,"r:UTF-8")
