@@ -11,9 +11,26 @@ markdown = Redcarpet::Markdown.new(Redcarpet::Render::HTML,
 									prettify: true,
 									fenced_code_blocks: true)
 
-$settings = File.open(".pars.yml") { |file| YAML.load(file) }
+
+
+
+
 
 if Pars.isParsDir? then
+
+	$default_settings = {
+		"title" => "Title of site",
+		"description" => "Yet another static website"
+	}
+	
+	$user_settings = File.open(".pars.yml") { |file| YAML.load(file) } 
+
+	$settings = {
+			"title" => if $user_settings then if $user_settings["title"] != nil then $user_settings["title"] else $default_settings["title"] end else $default_settings["title"] end,
+			"description" => if $user_settings then if $user_settings["description"] != nil then $user_settings["description"] else $default_settings["description"] end else $default_settings["description"] end
+		} 
+
+	puts $settings
 
 	if Pars.anyPost? then
 
@@ -24,7 +41,7 @@ if Pars.isParsDir? then
 
 		index = File.open("index.html","a")
 
-		Pars.generate
+		# Pars.generate
 
 		# Dir.foreach( Dir.pwd + "/posts" ) do |item|
 			
