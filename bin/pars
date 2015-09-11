@@ -30,8 +30,7 @@ if Pars.isParsDir? then
 			"description" => if $user_settings then if $user_settings["description"] != nil then $user_settings["description"] else $default_settings["description"] end else $default_settings["description"] end
 		} 
 
-	puts $settings
-
+		
 	if Pars.anyPost? then
 
 		header = File.open("view/header.html").read
@@ -41,7 +40,7 @@ if Pars.isParsDir? then
 
 		index = File.open("index.html","a")
 
-		# Pars.generate
+		Pars.generate
 
 		# Dir.foreach( Dir.pwd + "/posts" ) do |item|
 			
