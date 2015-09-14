@@ -5,11 +5,11 @@ require "haml"
 require "fileutils"
 require "kramdown"
 require "tilt"
+require "pars/generate"
 
+module Pars
 
-class Pars
-
-	def self.isParsDir?
+	def isParsDir?
 		if File.exist?(".pars.yml") then
 			true
 		else
@@ -17,7 +17,7 @@ class Pars
 		end
 	end
 
-	def self.anyPost?
+	def anyPost?
 		if File.exist?(Dir.pwd + "/posts") then
 			true
 		else
@@ -25,73 +25,13 @@ class Pars
 		end
 	end
 
-	def self.dir?(path)
+	def dir?(path)
 		true
 	end
 
-	def self.directory_hash(path, name=nil)
-
-	  data = {:data => (name || path)}
-	  data[:children] = children = []
-
-	  Dir.foreach(path) do |entry|
-
-	    next if (entry == '..' || entry == '.')
-
-	    full_path = File.join(path, entry)
-
-	    if File.directory?(full_path)
-	      children << directory_hash(full_path, entry)
-	    else
-	      children << entry
-	    end
-	  end
-
-	  return data
-	end
-
-	def self.generate
-		markdown = Redcarpet::Markdown.new(Redcarpet::Render::HTML,
-									autolink: true, tables: true,
-									prettify: true,
-									fenced_code_blocks: true)
-
-		template = Tilt.new("view/theme.haml")
-
-		filetant = ["posts","view",".pars.yml"]
-
-		Dir.foreach(Dir.pwd) do |item|
-			next if item == '.' or item == '..'
-			if !filetant.include? item then
-				FileUtils.rm_rf item 
-				puts "remove :" + item
-			end
-		end
-
-		Dir.glob("posts/**/" + "*.md") do |post|
-
-			md_content = File.open(post,"r:UTF-8")
-
-			html_content = markdown.render(md_content.read)
-			html_file = post.sub("posts/","")
-			html_dir = post.sub(/[\d]*\.?[\w]+.md$/,"").sub("posts/","")
-
-			puts "for :" + post
-
-			if html_dir != "" then
-				FileUtils.mkdir_p(html_dir)
-				puts(html_dir + "generated")
-			end
-
-			File.open(html_file.sub(".md",".html"), "w:UTF-8") { |io|
-				io.write(template.render(self,:title => "title", :content => html_content))
-				puts html_file + " created"
-			}
-
-			md_content.close
-			
-		end
-
+	def generate
+		gen = Pars::Generate.new
+		gen.generatePage
 		
 	end
 

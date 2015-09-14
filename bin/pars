@@ -6,15 +6,7 @@ require "fileutils"
 require "redcarpet"
 require "pars"
 
-markdown = Redcarpet::Markdown.new(Redcarpet::Render::HTML,
-									autolink: true, tables: true,
-									prettify: true,
-									fenced_code_blocks: true)
-
-
-
-
-
+include Pars
 
 if Pars.isParsDir? then
 
@@ -31,7 +23,7 @@ if Pars.isParsDir? then
 		} 
 
 		
-	if Pars.anyPost? then
+	if anyPost? then
 
 		header = File.open("view/header.html").read
 		footer = File.open("view/footer.html").read
@@ -40,34 +32,9 @@ if Pars.isParsDir? then
 
 		index = File.open("index.html","a")
 
-		Pars.generate
+		generate
 
-		# Dir.foreach( Dir.pwd + "/posts" ) do |item|
-			
-		# 	puts item
-
-		# 	# Remove . and .. file in from list
-		# 	next if item == '.' or item == '..'
-
-
-		# 	data = File.open(Dir.pwd + "/posts/" + item)
-
-		# 	repc = { ".md" => ".html"}
-
-
-		# 	FileUtils.touch( item.sub!(".md", ".html") )
-				
-		# 	File.open( Dir.pwd + "/" + item , 'w' ) do |file|
-		# 		file.write( header + markdown.render(data.read) + footer)
-		# 	end
-
-		# 	index.write('<li><a href='+item +'>'+ item.sub!(".html", "") + '</a></li>')
-
-		# 	data.close
-
-		# 	puts "\n"
-		# end
-
+		
 		index.close
 	else
 
