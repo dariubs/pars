@@ -23,6 +23,7 @@ module Pars
 			@settings = getSetting
 		end
 
+		# Main function for generate website
 		def generate!
 			removeFiles
 			createFiles
@@ -50,8 +51,16 @@ module Pars
 		end
 
 		def getTheme(item=nil)
+			themes = {
+				:index => "index.haml",
+				:page => "page.haml"
+			}
 
-
+			if item != nil && item != "" then
+				themes[item]
+			else
+				themes[:page]
+			end
 		end
 
 		def getSetting(item=nil)
@@ -99,6 +108,10 @@ module Pars
 				if html_dir != "" then
 					FileUtils.mkdir_p(html_dir)
 					puts(html_dir + "generated")
+
+					# create index file for each directory
+					File.open(html_dir + "/index.html", "w")
+
 				end
 
 				File.open(html_file.sub(".md",".html"), "w:UTF-8") { |io|
