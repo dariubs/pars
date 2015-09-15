@@ -1,6 +1,7 @@
 # external dependencies
 require 'haml'
 require 'tilt'
+require 'redcarpet'
 
 
 # stdlib dependencies
@@ -45,7 +46,7 @@ module Pars
 
 		# Get Content of a file
 		def getFileContent
-
+			
 		end
 
 		def getTheme(item=nil)
@@ -63,8 +64,8 @@ module Pars
 			user_settings = File.open(".pars.yml") { |file| YAML.load(file) } 
 
 			settings = {
-				"title" => if $user_settings then if $user_settings["title"] != nil then $user_settings["title"] else $default_settings["title"] end else $default_settings["title"] end,
-				"description" => if $user_settings then if $user_settings["description"] != nil then $user_settings["description"] else $default_settings["description"] end else $default_settings["description"] end
+				"title" => if user_settings then if user_settings["title"] != nil then user_settings["title"] else default_settings["title"] end else default_settings["title"] end,
+				"description" => if user_settings then if user_settings["description"] != nil then user_settings["description"] else default_settings["description"] end else default_settings["description"] end
 				} 			
 
 
