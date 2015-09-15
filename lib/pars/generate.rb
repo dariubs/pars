@@ -23,43 +23,10 @@ module Pars
 		end
 
 		def generate!
-
-			template = Tilt.new("view/theme.haml")
-
-			filetant = getImportantFilesList
-
-			Dir.foreach(Dir.pwd) do |item|
-				next if item == '.' or item == '..'
-				if !filetant.include? item then
-					FileUtils.rm_rf item 
-					puts "remove :" + item
-				end
-			end
-
-			Dir.glob("posts/**/" + "*.md") do |post|
-
-				md_content = File.open(post,"r:UTF-8")
-
-				html_content = @markdown.render(md_content.read)
-				html_file = post.sub("posts/","")
-				html_dir = post.sub(/[\d]*\.?[\w]+.md$/,"").sub("posts/","")
-
-				puts "for :" + post
-
-				if html_dir != "" then
-					FileUtils.mkdir_p(html_dir)
-					puts(html_dir + "generated")
-				end
-
-				File.open(html_file.sub(".md",".html"), "w:UTF-8") { |io|
-					io.write(template.render(self,:title => "title", :content => html_content))
-					puts html_file + " created"
-				}
-
-				md_content.close
-			end
-
+			removeFiles
+			createFiles
 		end
+
 
 		# generate index file for specific paths
 		def generateIndex
@@ -115,8 +82,31 @@ module Pars
 		end
 
 		# Create file from generated page
-		def createFile
+		def createFiles
+			template = Tilt.new("view/theme.haml")
 
+			Dir.glob("posts/**/" + "*.md") do |post|
+
+				md_content = File.open(post,"r:UTF-8")
+
+				html_content = @markdown.render(md_content.read)
+				html_file = post.sub("posts/","")
+				html_dir = post.sub(/[\d]*\.?[\w]+.md$/,"").sub("posts/","")
+
+				puts "for :" + post
+
+				if html_dir != "" then
+					FileUtils.mkdir_p(html_dir)
+					puts(html_dir + "generated")
+				end
+
+				File.open(html_file.sub(".md",".html"), "w:UTF-8") { |io|
+					io.write(template.render(self,:title => "title", :content => html_content))
+					puts html_file + " created"
+				}
+
+				md_content.close
+			end
 		end
 
 		# Get Important File from config file
@@ -135,6 +125,19 @@ module Pars
 			end
 
 			return files
+		end
+
+		# Remove files related to last site generate
+		def removeFiles
+			filetant = getImportantFilesList
+
+			Dir.foreach(Dir.pwd) do |item|
+				next if item == '.' or item == '..'
+				if !filetant.include? item then
+					FileUtils.rm_rf item 
+					puts "remove :" + item
+				end
+			end
 		end
 	end
 end
