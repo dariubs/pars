@@ -31,8 +31,7 @@ module Pars
 
 	def generate
 		gen = Pars::Generate.new
-		gen.generatePage
-		
+		gen.generate!
 	end
 
 end

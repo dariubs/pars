@@ -1,12 +1,11 @@
 # external dependencies
-require 'yaml'
-require "haml"
-require "fileutils"
-require "kramdown"
-require "tilt"
+require 'haml'
+require 'tilt'
 
 
 # stdlib dependencies
+require 'fileutils'
+require 'yaml'
 
 # internal files
 
@@ -19,61 +18,15 @@ module Pars
 							autolink: true, tables: true,
 							prettify: true,
 							fenced_code_blocks: true)
+
+			@settings = getSetting
 		end
 
-		# generate index file for specific paths
-		def generateIndex
+		def generate!
 
-		end
-
-		# Generate HTML content from Markdown
-		def generateHTMLContent
-
-		end
-
-		# Create Directory Structure from Contents Directory Structure
-		def createDirStructure
-
-		end
-
-		# Get Content of a file
-		def getFileContent
-
-		end
-
-		def getTheme
-
-		end
-
-		def getSetting(item=nil)
-			
-			default_settings = {
-				"title" => "Title of site",
-				"description" => "Yet another static website"
-				}
-
-			user_settings = File.open(".pars.yml") { |file| YAML.load(file) } 
-
-			settings = {
-				"title" => if $user_settings then if $user_settings["title"] != nil then $user_settings["title"] else $default_settings["title"] end else $default_settings["title"] end,
-				"description" => if $user_settings then if $user_settings["description"] != nil then $user_settings["description"] else $default_settings["description"] end else $default_settings["description"] end
-				} 			
-
-
-			if item == nil then
-				return settings
-			else
-				return settings[item]
-			end
-
-		end
-
-		# Combine HTML Content with theme files
-		def generatePage
-			
 			template = Tilt.new("view/theme.haml")
 
-			filetant = ["posts","view",".pars.yml"]
+			filetant = getImportantFilesList
 
 			Dir.foreach(Dir.pwd) do |item|
 				next if item == '.' or item == '..'
@@ -105,6 +58,60 @@ module Pars
 
 				md_content.close
 			end
+
+		end
+
+		# generate index file for specific paths
+		def generateIndex
+
+		end
+
+		# Generate HTML content from Markdown
+		def generateHTMLContent
+
+		end
+
+		# Create Directory Structure from Contents Directory Structure
+		def createDirStructure
+
+		end
+
+		# Get Content of a file
+		def getFileContent
+
+		end
+
+		def getTheme(item=nil)
+
+
+		end
+
+		def getSetting(item=nil)
+			
+			default_settings = {
+				"title" => "Title of site",
+				"description" => "Yet another static website"
+				}
+
+			user_settings = File.open(".pars.yml") { |file| YAML.load(file) } 
+
+			settings = {
+				"title" => if $user_settings then if $user_settings["title"] != nil then $user_settings["title"] else $default_settings["title"] end else $default_settings["title"] end,
+				"description" => if $user_settings then if $user_settings["description"] != nil then $user_settings["description"] else $default_settings["description"] end else $default_settings["description"] end
+				} 			
+
+
+			if item == nil then
+				return settings
+			else
+				return settings[item]
+			end
+
+		end
+
+		# Combine HTML Content with theme files
+		def generatePage
+			
 		end
 
 		# Create file from generated page
@@ -114,8 +121,20 @@ module Pars
 
 		# Get Important File from config file
 		# Don't remove this files and dirs in regenerate website
-		def getImportantFiles
+		def getImportantFilesList
+			userfiles = getSetting("important")
+			systemfiles = ["posts","view",".git",".pars.yml"]
 
+			if userfiles != nil || userfiles.kind_of?(Array) then
+				files = (userfiles + systemfiles).uniq
+
+			elsif userfiles != nil || userfiles.kind_of?(String)
+				files = systemfiles.push(userfiles).uniq
+			else
+				files = systemfiles
+			end
+
+			return files
 		end
 	end
 end
