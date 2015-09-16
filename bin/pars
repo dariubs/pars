@@ -5,13 +5,11 @@ require "pars"
 include Pars
 
 if Pars.isParsDir? then
-		
 	if anyPost? then
 		generate
 	else
 		puts "posts not exists"
 	end
-
 else
 	puts "Here is not a pars project."
 end

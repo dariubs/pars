@@ -13,7 +13,6 @@ require 'yaml'
 
 module Pars
 	class Generate
-		
 		def initialize
 			@markdown = Redcarpet::Markdown.new(Redcarpet::Render::HTML,
 							autolink: true, tables: true,
@@ -29,9 +28,8 @@ module Pars
 			createFiles
 		end
 
-
 		# generate index file for specific paths
-		def generateIndex
+		def generateIndex(path)
 
 		end
 
@@ -46,11 +44,15 @@ module Pars
 		end
 
 		# Get Content of a file
-		def getFileContent
-			
+		def getFileContent(path)
+			content = File.open(path, "r+")
+
+			return content
 		end
 
 		def getTheme(item=nil)
+			base = getSetting('themes_dir') || ""
+
 			themes = {
 				:index => "index.haml",
 				:page => "page.haml"

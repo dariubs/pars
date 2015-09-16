@@ -1,14 +1,8 @@
 # -*- coding: UTF-8 -*-
 
-require 'yaml'
-require "haml"
-require "fileutils"
-require "kramdown"
-require "tilt"
 require "pars/generate"
 
 module Pars
-
 	def isParsDir?
 		if File.exist?(".pars.yml") then
 			true
@@ -33,5 +27,4 @@ module Pars
 		gen = Pars::Generate.new
 		gen.generate!
 	end
-
 end
