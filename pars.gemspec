@@ -12,11 +12,10 @@ Gem::Specification.new do |s|
   s.description = "A static, static site generator!"
   s.authors     = ["Dariush Abbasi"]
   s.email       = 'poshtehani@gmail.com'
-  s.files       = ['bin/pars', 'lib/pars.rb', 'lib/pars/generate.rb', 'lib/pars/version.rb']
+  s.files       = ['bin/pars', 'lib/pars.rb', 'lib/pars/generate.rb', 'lib/pars/cli.rb', 'lib/pars/version.rb']
   s.executables   = ["pars"]
   s.require_paths = ["lib"]
   s.homepage    =
     'http://github.com/dariubs/pars'
   s.license       = 'MIT'
 end
-
